@@ -1,0 +1,124 @@
+.signup {
+    display: grid;
+    grid-template-columns: 1fr 10fr 1fr;
+    column-gap: 50px;
+    background-color: black;
+    min-height: 100vh;
+  }
+
+.modal {
+    font-family: Ubuntu, sans-serif;
+    color: #000;
+    display: grid;
+    grid-template-columns: 3fr 9fr;
+    margin: 10rem 2rem;
+    background-color: white;
+}
+
+.leftContainer {
+    background-color: #34ebae;
+}
+
+.rightContainer {
+    padding: 10rem 3rem;
+}
+
+.formHeader {
+    text-align: left;
+    margin-bottom: 4rem;
+}
+
+.formHeader h1 {
+    font-size: 3.5rem;
+    font-weight: bolder;
+    margin-bottom: 3rem;
+}
+
+.formHeader h4 {
+    font-weight: bolder;
+    margin-bottom: 1rem;
+}
+
+.formBody {
+    display: grid;
+    grid-template-columns: 6fr 6fr;
+    column-gap: 50px;
+    row-gap: 10px;
+    text-align: left;
+}
+
+.formBody span {
+    color: red;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.formBody label {
+    font-size: 1.5rem;
+}
+
+.formBody input {
+    font-size: 1rem;
+    width: 100%;
+    padding: 1.5rem;
+    margin: 0.5rem 0 2rem 0;
+    border: none;
+}
+  
+.formBody input:focus {
+    background-color: #ddd;
+    outline: none;
+    font-weight: bolder;
+    font-style: italic;
+}
+
+.formBody select {
+    width: 100%;
+    padding: 1.5rem;
+    margin: 0.5rem 0 2rem 0;
+    border: none;
+}
+
+.formBody select:focus {
+    background-color: #ddd;
+    outline: none;
+    font-weight: bolder;
+    font-style: italic;
+}
+
+.formBody option {
+    font-size: 1.5rem;
+}
+
+.termsBox {
+    padding: 0%;
+    margin: 1.5rem 0;
+    line-height: 2rem;
+}
+.termsBox label {
+    font-size: 1rem;
+}
+
+.modal button {
+    background-color: #4CAF50;   /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.modal button:hover {
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.cancelbtn {
+    background-color: #f44336;
+}
+
+.signupbtn {
+    border-radius:1rem;
+    margin-bottom: 2rem;
+}
