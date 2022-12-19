@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import Head from "next/head";
-import styles from '../styles/Signup.module.css'
+import styles from '../styles/Signup.module.css';
+import axios from 'axios';
 
 export default function SignUp() {
     const router = useRouter()
@@ -9,12 +10,12 @@ export default function SignUp() {
         event.preventDefault();
         const email = event.target.elements.email.value;
         const myObj = {
-            "first_name": event.target.elements.first_name.value,
-            "last_name": event.target.elements.last_name.value,
+            "firstName": event.target.elements.first_name.value,
+            "lastName": event.target.elements.last_name.value,
             "email": event.target.elements.email.value,
-            "mobile": event.target.elements.mobile.value,
+            "mobileNumber": event.target.elements.mobile.value,
             "gender": event.target.elements.gender.value,
-            "dob": event.target.elements.dob.value,
+            "dateOfBirth": event.target.elements.dob.value,
             "password": event.target.elements.password.value,
             "psw_repeat": event.target.elements.pswrepeat.value,
             "notifications": event.target.elements.notifications.value,
@@ -23,8 +24,23 @@ export default function SignUp() {
             window.alert("Passwords didn't match");
             return;
         }
-        console.log(myObj);
-        router.push('/signup');
+
+        let url = "https://b1aa-103-212-147-171.in.ngrok.io/api/v1/users/signup";
+
+        axios.post(
+            url,
+            myObj
+        )
+        .then((res) => {
+            window.alert("User Sign Up Successful! Please login to proceed!");
+            router.push("/");
+            console.log(res) 
+        })
+        .catch((error) => {
+            console.log(error)
+            window.alert("Sign Up Failed!");
+            router.push("/");
+        })
     }
 
     function onCancel(event) {
@@ -84,10 +100,10 @@ export default function SignUp() {
 
                                         <label for="gender"><b>Gender </b></label><span>*</span>
                                         <select name="gender" id="gender">
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
-                                            <option value="others">Others</option>
-                                            <option value="dont-share">Don't want to share</option>
+                                            <option value="MALE">Male</option>
+                                            <option value="FEMALE">Female</option>
+                                            <option value="OTHERS">Others</option>
+                                            <option value="NOT_DISCLOSE">Don't want to share</option>
                                         </select>
                                     </div>
 

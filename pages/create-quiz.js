@@ -2,7 +2,8 @@ import { useRouter } from 'next/router';
 import Head from "next/head";
 import React from 'react';
 import { useEffect } from 'react';
-import styles from '../styles/CreateQuiz.module.css'
+import styles from '../styles/CreateQuiz.module.css';
+import axios from 'axios';
 
 export default function createQuiz() {
     const [steps, setSteps] = React.useState(0);
@@ -13,7 +14,7 @@ export default function createQuiz() {
         event.preventDefault();
         setQuiz({
             "quizName": event.target.elements.quizName.value,
-            "quizDescription": event.target.elements.description.value,
+            "description": event.target.elements.description.value,
             "totalMarks": 0,
             "questions": []
         })
@@ -44,12 +45,8 @@ export default function createQuiz() {
             return;
         }
 
-        if(event.target.elements.type.value == "SINGLE_CORRECT" && checkedCount != 1){
-            window.alert("Question Type incompatible with the selected Correct Options!");
-            return;   
-        }
-
-        if(event.target.elements.type.value == "MULTI_CORRECT" && checkedCount == 1){
+        if((event.target.elements.type.value == "SINGLE_CORRECT" && checkedCount != 1) || 
+        (event.target.elements.type.value == "MULTI_CORRECT" && checkedCount == 1)) {
             window.alert("Question Type incompatible with the selected Correct Options!");
             return;   
         }
@@ -75,7 +72,7 @@ export default function createQuiz() {
 
         var question = {
             "questionStatement": event.target.elements.statement.value,
-            "difficulty": event.target.elements.difficulty.value,
+            "difficulty": parseInt(event.target.elements.difficulty.value),
             "type": event.target.elements.type.value,
             "marks": parseInt(event.target.elements.marks.value),
             "negativeMarks": parseInt(event.target.elements.negative.value),
@@ -92,11 +89,51 @@ export default function createQuiz() {
     }
 
     function onQuizSubmission(event) {
-        onQuizQuestionSubmit(event);
-        window.alert("Quiz created successfully!");
-        router.push("/");
-        //API Call
 
+        onQuizQuestionSubmit(event);
+
+        let url = "https://b1aa-103-212-147-171.in.ngrok.io/api/v1/quiz/create";
+        var myObj=quiz
+
+        axios.post(
+            url,
+            myObj
+        )
+        .then((res) => {
+            var temp = quiz;
+            temp.quizId = res.data.quizId;
+            setQuiz(temp);
+            window.alert("Quiz created successfully!");
+        })
+        .catch((error) => {
+            console.log(error)
+            setSteps(steps-1)
+            window.alert("Unable to create quiz now! Please try again later");
+        })
+    }
+
+    function onInvitation(event) {
+
+        let url = "https://b1aa-103-212-147-171.in.ngrok.io/api/v1/users/invite";
+
+        var myObj={
+            "quizId": quiz.quizId,
+            "to": event.target.elements.members.value.split(",")
+        }
+
+        axios.post(
+            url,
+            myObj
+        )
+        .then((res) => {
+            window.alert("Users Invited Successfully!")
+        })
+        .catch((error) => {
+            console.log(error)
+            window.alert("Unable to invite members! Please try again later");
+        })
+
+        
     }
 
     function clearForm() {
@@ -121,7 +158,7 @@ export default function createQuiz() {
                                     </div>
 
                                     <div>
-                                        <label for="description"><b>Description </b></label><span>*</span>
+                                        <label for="description"><b>Description </b></label>
                                         <input type="text" placeholder="Description Goes Here ..." name="description" />
                                     </div>
 
@@ -137,6 +174,26 @@ export default function createQuiz() {
                                     <h1>Quiz Details</h1>
                                     <h4>Please enter quiz details!</h4>
                                 </div>
+
+    const invitationForm = <form onSubmit={onInvitation}>
+                                <div className={styles.questionFormBody}>
+
+                                    <div>
+                                        <label for="members"><b>Member's Email Id(s)</b></label><span>*</span>
+                                        <input type="text" placeholder="Enter Member's Email Id(s)" name="members" required />
+                                    </div>
+                                </div>
+
+                                <div></div>
+
+                                <button type="submit" class={styles.nextbtn}>Next</button>
+
+                            </form>
+
+    const invitationHeader = <div className={styles.formHeader}>
+                                <h1>Invitation</h1>
+                                <h4>Invite members to take the quiz!</h4>
+                            </div>
     
     const quizQuestionHeader = <div className={styles.formHeader}>
                                     <h1>Question No. {steps}</h1>
@@ -216,10 +273,10 @@ export default function createQuiz() {
 
                     <div className={styles.rightContainer}>
 
-                        {steps == 0 ? quizDetailsHeader : quizQuestionHeader}
+                        {steps == 0 ? quizDetailsHeader : (steps > 10 ? invitationHeader : quizQuestionHeader)}
 
                         <div>
-                            {steps == 0 ? quizDetailsForm : quizQuestionForm}
+                            {steps == 0 ? quizDetailsForm : (steps > 10 ? invitationForm : quizQuestionForm)}
                         </div>
 
 

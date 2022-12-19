@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import Head from "next/head";
 import styles from '../styles/Login.module.css'
+import axios from 'axios';
 
 export default function logIn() {
     const router = useRouter()
@@ -12,13 +13,23 @@ export default function logIn() {
             "password": event.target.elements.password.value,
             "remember": event.target.elements.remember.value,
         };
-        console.log(myObj);
-        router.push('/login');
+
+        let url = "https://b1aa-103-212-147-171.in.ngrok.io/api/v1/users/login";
+        axios.post(
+            url,
+            myObj
+        )
+        .then((res) => {
+            localStorage.setItem("auth-token", res.data.token);
+            window.alert("Login Successful! Please proceed with a Quiz.");
+            router.push("/");
+        })
+        .catch((error) => {
+            window.alert("Login Failed!");
+            router.push("/");
+        })
     }
 
-    function onCancel(event) {
-        router.push('/');
-    }
 
     return (
         <>
